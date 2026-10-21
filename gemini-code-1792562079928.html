@@ -1,0 +1,45 @@
+<!-- Leaflet.js Maps CDN -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```[cite: 15]
+
+#### Langkah B: Pastikan Fungsi JavaScript Pemetaan Aktif
+Di bagian `<script>` file HTML kamu, pastikan fungsi untuk mengambil data gempa dan menggambarnya ke peta (`plotAllQuakesOnMap`) sudah ada, seperti berikut[cite: 15]:
+```javascript
+async function fetchBMKGData() {
+    const resMag5 = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json');
+    const dataMag5 = await resMag5.json();
+    rawMag5Data = dataMag5.Infogempa.gempa || [];
+    
+    plotAllQuakesOnMap(); // Fungsi untuk memunculkan titik-titik gempa di peta
+}
+
+function plotAllQuakesOnMap() {
+    // Membersihkan marker lama lalu menggambar ulang titik gempa berdasarkan data BMKG
+    rawMag5Data.forEach(item => {
+        let lat = parseFloat(item.Coordinates.split(',')[0]);
+        let lng = parseFloat(item.Coordinates.split(',')[1]);
+        
+        // Membuat lingkaran titik gempa di peta Leaflet
+        L.circleMarker([lat, lng], {
+            radius: 8,
+            fillColor: '#ef4444', // Warna merah untuk pusat gempa
+            color: '#ffffff',
+            weight: 1,
+            fillOpacity: 0.8
+        }).addTo(map).bindPopup(`<b>${item.Wilayah}</b><br>Magnitudo: ${item.Magnitude}`);
+    });
+}
+```[cite: 15]
+
+#### Langkah C: Cukup Panggil Link GitHub Pages di MIT App Inventor
+Karena seluruh kecerdasan peta, titik koordinat, dan data BMKG sudah diurus oleh file HTML, di **MIT App Inventor Blocks** tugasmu menjadi sangat ringkas. Kamu hanya perlu menyambungkan link GitHub Pages file HTML tersebut ke `WebViewer`:
+
+```text
+when Screen1.Initialize do
+    set WebViewer1.HomeUrl to "https://username-kamu.github.io/nama-repositori/"
+    call WebViewer1.GoToUrl (url: "https://username-kamu.github.io/nama-repositori/")
+```[cite: 1]
+
+### Kesimpulan
+Dengan metode **WebViewer + Leaflet.js HTML**, peta di aplikasi MIT App Inventor milikmu akan otomatis berubah menjadi peta pemantau gempa interaktif canggih yang dapat mendeteksi dan menampilkan titik-titik gempa di seluruh wilayah Indonesia secara *live* persis seperti website resmi BMKG[cite: 15]!
